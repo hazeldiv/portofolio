@@ -27,7 +27,6 @@ export interface ProjectCardProps {
   tags: string[];
   viewUrl: string;
   descriptionSide?: "left" | "right";
-  iframeAspectRatio?: string;
 }
 
 export function ProjectCard({
@@ -39,7 +38,6 @@ export function ProjectCard({
   tags,
   viewUrl,
   descriptionSide = "right",
-  iframeAspectRatio = "aspect-[4/5]",
 }: ProjectCardProps) {
   const iframeContainerRef = useRef<HTMLDivElement>(null);
   const [iframeScale, setIframeScale] = useState(1);
@@ -72,7 +70,7 @@ export function ProjectCard({
           title={iframeTitle}
           loading="lazy"
           scrolling="no"
-          className={`w-[1440px] h-[900px] border-0 pointer-events-none origin-top-left ${iframeAspectRatio}`}
+          className={`w-[1440px] h-[900px] border-0 pointer-events-none origin-top-left aspect-[4/5]`}
           style={{ scale: iframeScale }}
           sandbox="allow-scripts allow-same-origin"
         />

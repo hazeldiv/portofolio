@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { TypeAnimation } from "react-type-animation";
 import { SideLink } from "./components/SideLink";
 import { ProjectCard } from "./components/ProjectCard";
 import {
@@ -22,42 +23,96 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [activeProject, setActiveProject] = useState(0);
 
   const navSections = [
     { id: "home", label: "HOME", href: "#home", icon: <IconArrowNE /> },
-    { id: "work", label: "WORK", href: "#work", icon: <IconGrid /> },
+    { id: "work", label: "WORKS", href: "#work", icon: <IconGrid /> },
     { id: "skills", label: "SKILLS", href: "#skills", icon: <IconLayers /> },
     { id: "contact", label: "CONTACT", href: "#contact", icon: <IconMail /> },
   ];
 
   const footerLinks = [
     { label: "HOME", href: "#home" },
-    { label: "PORTFOLIO", href: "#work" },
+    { label: "WORKS", href: "#work" },
     { label: "SKILLS", href: "#skills" },
   ];
 
   const focusRingClass =
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#131315]";
 
+  const projects = [
+    {
+      title: "Pilar08.org",
+      url: "https://pilar08.org",
+      iframeTitle: "Pilar08.org live preview",
+      description:
+        "A centralized platform for architectural resources and community engagement. Built with performance and minimal design at its core.",
+      tags: ["NextJS", "PostgreSQL"],
+    },
+    {
+      title: "Fitness Goal Planner",
+      url: "https://fitness-goal-planner.vercel.app/",
+      iframeTitle: "Fitness Goal Planner live preview",
+      description:
+        "Personalized workout architecture. A full-stack application focused on algorithmic goal setting and progress visualization.",
+      tags: ["NextJS"],
+    },
+  ];
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   useEffect(() => {
-    const observers = navSections.map(({ id }) => {
-      const el = document.getElementById(id);
-      if (!el) return null;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        { threshold: 0.3 },
-      );
-      observer.observe(el);
-      return observer;
-    });
-    return () => observers.forEach((obs) => obs?.disconnect());
+    const handleScroll = () => {
+      // Section tracking
+      const scrollY = window.scrollY + window.innerHeight * 0.25;
+      let currentSection = navSections[0].id;
+      for (const { id } of navSections) {
+        const el = document.getElementById(id);
+        if (el && el.offsetTop <= scrollY) {
+          currentSection = id;
+        }
+      }
+      setActiveSection(currentSection);
+
+      // Project tracking (only while in work section)
+      const workEl = document.getElementById("work");
+      if (workEl) {
+        const mid = window.scrollY + window.innerHeight * 0.5;
+        if (
+          mid >= workEl.offsetTop &&
+          mid <= workEl.offsetTop + workEl.offsetHeight
+        ) {
+          let currentProject = 0;
+          for (let i = 0; i < projects.length; i++) {
+            const el = document.getElementById(`project-${i}`);
+            if (el && el.offsetTop <= mid) {
+              currentProject = i;
+            }
+          }
+          setActiveProject(currentProject);
+        }
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const scrollToProject = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    el.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "center",
+    });
+  };
 
   const currentStudyTime = Math.ceil(
     (new Date().getTime() - new Date("2024-09-01").getTime()) /
@@ -165,6 +220,28 @@ export default function Home() {
         </div>
       </aside>
 
+      {/* Floating project dot navigator — visible only while in WORKS section */}
+      <div
+        className={`hidden md:flex fixed right-28 top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-4 transition-all duration-500 ${
+          activeSection === "work"
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        {projects.map((p, i) => (
+          <button
+            key={`dot-${i}`}
+            onClick={() => scrollToProject(`project-${i}`)}
+            aria-label={`Go to project: ${p.title}`}
+            className={`transition-all duration-300 rounded-full ${
+              activeProject === i
+                ? "w-2 h-2 bg-[#cc9900] dark:bg-[#FFBF00]"
+                : "w-2 h-2 bg-[#d4c5ab] dark:bg-[#504532] hover:bg-[#cc9900] dark:hover:bg-[#FFBF00]"
+            } ${focusRingClass}`}
+          />
+        ))}
+      </div>
+
       <main className="md:pr-20">
         <section
           id="home"
@@ -172,8 +249,20 @@ export default function Home() {
         >
           <div className="max-w-7xl w-full">
             <div className="flex flex-wrap items-baseline gap-4 mb-10">
-              <span className="font-headline max-lg:w-full text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase">
-                Full-Stack Developer
+              <span className="font-headline max-lg:w-full text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase min-h-[20px]">
+                <TypeAnimation
+                  sequence={[
+                    "FULL-STACK DEVELOPER",
+                    3000,
+                    "SOFTWARE ENGINEER",
+                    3000,
+                    "TECH ENTHUSIAST",
+                    3000,
+                  ]}
+                  wrapper="span"
+                  speed={20}
+                  repeat={Infinity}
+                />
               </span>
               <span className="h-px w-24 bg-[#d4c5ab] dark:bg-[#504532] self-center max-lg:hidden" />
               <span className="font-headline text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase">
@@ -190,17 +279,17 @@ export default function Home() {
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
               <div className="xl:col-start-7 xl:col-span-6">
                 <p className="text-lg md:text-xl text-[#6b5e44] dark:text-[#9c8f78] font-light leading-relaxed mb-10 text-justify w-[90%]">
-                  Engineering digital structures with architectural precision.
-                  Currently focused on building scalable full-stack applications
-                  while exploring the intersection of modern aesthetics and
-                  performance.
+                  Hello, I'm Hazel Div Alden. I design and build full-stack web
+                  applications with clean architecture, strong performance, and
+                  polished interfaces. I help teams turn ideas into reliable
+                  software through pragmatic engineering and thoughtful design.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <a
                     href="#work"
                     className={`bg-[#cc9900] dark:bg-[#FFBF00] text-[#402d00] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all active:scale-95 hover:bg-[#b38600] dark:hover:bg-[#e6a800] ${focusRingClass}`}
                   >
-                    VIEW WORK
+                    VIEW WORKS
                   </a>
                   <a
                     className={`border border-[#d4c5ab] dark:border-[#504532] text-[#1a1a1c] dark:text-[#e4e2e4] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all hover:bg-[#f0ede6] dark:hover:bg-[#2a2a2c] active:scale-95 ${focusRingClass}`}
@@ -218,12 +307,12 @@ export default function Home() {
 
         <section
           id="work"
-          className="py-32 px-6 md:px-24 bg-[#f4f1ea] dark:bg-[#0e0e10]"
+          className="min-h-screen py-32 px-6 md:px-24 bg-[#f4f1ea] dark:bg-[#0e0e10]"
         >
           <div className="flex justify-between items-end mb-24">
             <div>
               <h2 className="font-headline text-xs tracking-[0.5em] text-[#cc9900] dark:text-[#FFBF00] uppercase mb-4">
-                Selected Work
+                Selected Works
               </h2>
               <h3 className="font-headline text-5xl md:text-7xl font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4]">
                 PROJECTS
@@ -232,35 +321,26 @@ export default function Home() {
           </div>
 
           <div className="space-y-40">
-            <ProjectCard
-              iframeUrl="https://pilar08.org"
-              iframeTitle="Pilar08.org live preview"
-              label="01 / WORK"
-              projectTitle="Pilar08.org"
-              description="A centralized platform for architectural resources and community engagement. Built with performance and minimal design at its core."
-              tags={["NextJS", "PostgreSQL"]}
-              viewUrl="https://pilar08.org"
-              descriptionSide="right"
-              iframeAspectRatio="aspect-[4/5]"
-            />
-
-            <ProjectCard
-              iframeUrl="https://fitness-goal-planner.vercel.app/"
-              iframeTitle="Fitness Goal Planner live preview"
-              label="02 / WORK"
-              projectTitle="Fitness Goal Planner"
-              description="Personalized workout architecture. A full-stack application focused on algorithmic goal setting and progress visualization."
-              tags={["NextJS"]}
-              viewUrl="https://fitness-goal-planner.vercel.app/"
-              descriptionSide="left"
-              iframeAspectRatio="aspect-[4/5]"
-            />
+            {projects.map((p, i) => (
+              <div key={`project-${i}`} id={`project-${i}`}>
+                <ProjectCard
+                  iframeUrl={p.url}
+                  iframeTitle={p.url}
+                  label={`0${i + 1} / WORKS`}
+                  projectTitle={p.title}
+                  description={p.description}
+                  tags={p.tags}
+                  viewUrl={p.url}
+                  descriptionSide={i % 2 === 0 ? "right" : "left"}
+                />
+              </div>
+            ))}
           </div>
         </section>
 
         <section
           id="skills"
-          className="py-32 px-6 md:px-24 bg-[#fdfbf7] dark:bg-[#131315]"
+          className="py-32 min-h-screen px-6 md:px-24 bg-[#fdfbf7] dark:bg-[#131315]"
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
             <div className="md:col-span-4">
@@ -354,7 +434,7 @@ export default function Home() {
 
         <footer
           id="contact"
-          className="bg-[#f4f1ea] dark:bg-[#0e0e10] py-32 px-6 md:px-24"
+          className="min-h-screen bg-[#f4f1ea] dark:bg-[#0e0e10] py-32 px-6 md:px-24"
         >
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16">
             <div className="md:w-1/2">
