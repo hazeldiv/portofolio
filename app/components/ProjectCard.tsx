@@ -60,8 +60,8 @@ export function ProjectCard({
     <div className="group flex flex-col xl:flex-row gap-6 xl:gap-8 items-stretch">
       <div
         ref={iframeContainerRef}
-        className={`xl:basis-[62%] overflow-hidden bg-[#1a1a1c] dark:bg-[#0a0a0a] w-full ${
-          isDescLeft ? "order-2 xl:order-2" : "order-1 xl:order-1"
+        className={`xl:basis-[62%] overflow-hidden bg-[#1a1a1c] dark:bg-[#0a0a0a] w-full order-1 ${
+          isDescLeft ? "xl:order-2" : "xl:order-1"
         }`}
         style={{ height: `${900 * iframeScale}px` }}
       >
@@ -76,8 +76,8 @@ export function ProjectCard({
         />
       </div>
       <div
-        className={`xl:basis-[38%] bg-[#fdfbf7] dark:bg-[#1f1f21] flex flex-col justify-center p-8 md:p-10 shadow-xl dark:shadow-none ${
-          isDescLeft ? "order-1 xl:order-1" : "order-2 xl:order-2"
+        className={`xl:basis-[38%] bg-[#fdfbf7] dark:bg-[#1f1f21] flex flex-col justify-center p-8 md:p-10 shadow-xl dark:shadow-none order-2 ${
+          isDescLeft ? "xl:order-1" : "xl:order-2"
         }`}
       >
         <span className="font-headline text-xs tracking-widest text-[#cc9900] dark:text-[#FFBF00] mb-4">

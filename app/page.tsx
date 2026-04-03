@@ -253,7 +253,7 @@ export default function Home() {
       <main className="md:pr-20">
         <section
           id="home"
-          className="min-h-screen flex flex-col justify-center px-6 md:px-24 pt-20 bg-[#fdfbf7] dark:bg-[#131315]"
+          className="min-h-[100dvh] flex flex-col justify-center px-6 md:px-24 pt-20 bg-[#fdfbf7] dark:bg-[#131315]"
         >
           <div className="max-w-7xl w-full">
             <div className="flex flex-wrap items-baseline gap-4 mb-10">
@@ -530,7 +530,13 @@ export default function Home() {
         </footer>
       </main>
 
-      <div className="fixed bottom-10 left-10 z-50">
+      <div
+        className={`fixed bottom-10 left-10 z-50 transition-all duration-300 ${
+          activeSection === "home"
+            ? "opacity-0 pointer-events-none translate-y-4"
+            : "opacity-100 pointer-events-auto translate-y-0"
+        }`}
+      >
         <button
           onClick={scrollToTop}
           aria-label="Scroll to top"
