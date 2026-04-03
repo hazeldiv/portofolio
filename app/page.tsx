@@ -482,7 +482,7 @@ export default function Home() {
                       },
                       {
                         label: "Instagram",
-                        href: "https://www.instagram.com/hazeldiv/",
+                        href: "https://www.instagram.com/hazelalden_/",
                       },
                     ].map((s) => (
                       <li key={s.label}>
