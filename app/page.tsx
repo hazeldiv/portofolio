@@ -278,7 +278,7 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="font-headline text-6xl md:text-[7rem] 2xl:text-[9rem] leading-none font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4] mb-6">
+            <h1 className="font-headline text-[4rem] md:text-[7rem] 2xl:text-[9rem] leading-none font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4] mb-6">
               HAZEL DIV
               <br />
               <span className="text-[#cc9900] dark:text-[#FFBF00]">ALDEN.</span>
@@ -286,7 +286,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
               <div className="xl:col-start-7 xl:col-span-6">
-                <p className="text-lg md:text-xl text-[#6b5e44] dark:text-[#9c8f78] font-light leading-relaxed mb-10 text-justify w-[90%]">
+                <p className="text-[1rem] md:text-xl text-[#6b5e44] dark:text-[#9c8f78] font-light leading-relaxed mb-10 text-justify w-[90%]">
                   Hello, I'm Hazel Div Alden. I design and build full-stack web
                   applications with clean architecture, strong performance, and
                   polished interfaces. I help teams turn ideas into reliable
