@@ -17,7 +17,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "STUDIO_ARCHIVE | Portfolio",
+  title: "Hazel Div Alden",
   description: "Full-Stack Developer Portfolio — Hazel Div Alden",
 };
 
