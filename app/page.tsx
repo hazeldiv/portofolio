@@ -51,6 +51,14 @@ export default function Home() {
       tags: ["NextJS", "PostgreSQL"],
     },
     {
+      title: "inkplex",
+      url: "https://inkplex.vercel.app/",
+      iframeTitle: "inkplex live preview",
+      description:
+        "An interactive AI-powered storytelling platform. Integrate your preferred AI API to dynamically generate and guide branching narratives in real-time.",
+      tags: ["NextJS"],
+    },
+    {
       title: "Fitness Goal Planner",
       url: "https://fitness-goal-planner.vercel.app/",
       iframeTitle: "Fitness Goal Planner live preview",
