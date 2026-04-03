@@ -140,9 +140,9 @@ export default function Home() {
 
   return (
     <>
-      <nav className="fixed top-0 w-full z-50 bg-[#fdfbf7]/90 dark:bg-[#131315]/90 backdrop-blur-md flex justify-between items-center px-6 md:px-12 py-5 border-b border-[#ede9e0] dark:border-[#1f1f21]">
+      <nav className="fixed top-0 w-full z-50 bg-[#fdfbf7]/90 dark:bg-[#131315]/90 backdrop-blur-md flex justify-between items-center px-6 md:px-12 py-3 sm:py-5 border-b border-[#ede9e0] dark:border-[#1f1f21]">
         <a
-          className={`text-xl font-bold tracking-tighter text-[#cc9900] dark:text-[#FFBF00] font-headline ${focusRingClass}`}
+          className={`text-lg sm:text-xl font-bold tracking-tighter text-[#cc9900] dark:text-[#FFBF00] font-headline ${focusRingClass}`}
           href="#home"
         >
           HAZEL DIV ALDEN
@@ -278,7 +278,7 @@ export default function Home() {
               </span>
             </div>
 
-            <h1 className="font-headline text-[4rem] md:text-[7rem] 2xl:text-[9rem] leading-none font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4] mb-6">
+            <h1 className="font-headline text-[3.5rem] sm:text-[5rem] md:text-[7rem] 2xl:text-[9rem] leading-none font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4] mb-6">
               HAZEL DIV
               <br />
               <span className="text-[#cc9900] dark:text-[#FFBF00]">ALDEN.</span>
@@ -295,12 +295,12 @@ export default function Home() {
                 <div className="flex flex-wrap gap-4">
                   <a
                     href="#work"
-                    className={`bg-[#cc9900] dark:bg-[#FFBF00] text-[#402d00] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all active:scale-95 hover:bg-[#b38600] dark:hover:bg-[#e6a800] ${focusRingClass}`}
+                    className={`bg-[#cc9900] dark:bg-[#FFBF00] text-[#402d00] px-5 sm:px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all active:scale-95 hover:bg-[#b38600] dark:hover:bg-[#e6a800] ${focusRingClass}`}
                   >
                     VIEW WORKS
                   </a>
                   <a
-                    className={`border border-[#d4c5ab] dark:border-[#504532] text-[#1a1a1c] dark:text-[#e4e2e4] px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all hover:bg-[#f0ede6] dark:hover:bg-[#2a2a2c] active:scale-95 ${focusRingClass}`}
+                    className={`border border-[#d4c5ab] dark:border-[#504532] text-[#1a1a1c] dark:text-[#e4e2e4] px-5 sm:px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all hover:bg-[#f0ede6] dark:hover:bg-[#2a2a2c] active:scale-95 ${focusRingClass}`}
                     href="/resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
