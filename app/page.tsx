@@ -59,6 +59,14 @@ export default function Home() {
       tags: ["NextJS"],
     },
     {
+      title: "The Checklisted",
+      url: "https://the-checklisted.vercel.app/",
+      iframeTitle: "The Checklisted live preview",
+      description:
+        "A lightweight, user-friendly to do web app for creating tasks and checklists. Quickly add and edit tasks, check items off as you complete them, and export your lists to Excel for backup or sharing. Designed for simple, persistent workflows and fast task management.",
+      tags: ["NextJS"],
+    },
+    {
       title: "Fitness Goal Planner",
       url: "https://fitness-goal-planner.vercel.app/",
       iframeTitle: "Fitness Goal Planner live preview",
