@@ -18,63 +18,63 @@ import {
   IconOutward,
 } from "./components/icons";
 
+const navSections = [
+  { id: "home", label: "HOME", href: "#home", icon: <IconArrowNE /> },
+  { id: "work", label: "WORKS", href: "#work", icon: <IconGrid /> },
+  { id: "skills", label: "SKILLS", href: "#skills", icon: <IconLayers /> },
+  { id: "contact", label: "CONTACT", href: "#contact", icon: <IconMail /> },
+];
+
+const footerLinks = [
+  { label: "HOME", href: "#home" },
+  { label: "WORKS", href: "#work" },
+  { label: "SKILLS", href: "#skills" },
+];
+
+const focusRingClass =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#131315]";
+
+const projects = [
+  {
+    title: "Pilar08.org",
+    url: "https://pilar08.org",
+    iframeTitle: "Pilar08.org live preview",
+    description:
+      "A centralized platform for architectural resources and community engagement. Built with performance and minimal design at its core.",
+    tags: ["NextJS", "PostgreSQL"],
+  },
+  {
+    title: "inkplex",
+    url: "https://inkplex.vercel.app/",
+    iframeTitle: "inkplex live preview",
+    description:
+      "An interactive AI-powered storytelling platform. Integrate your preferred AI API to dynamically generate and guide branching narratives in real-time.",
+    tags: ["NextJS"],
+  },
+  {
+    title: "The Checklisted",
+    url: "https://the-checklisted.vercel.app/",
+    iframeTitle: "The Checklisted live preview",
+    description:
+      "A lightweight, user-friendly to do web app for creating tasks and checklists. Quickly add and edit tasks, check items off as you complete them, and export your lists to Excel for backup or sharing. Designed for simple, persistent workflows and fast task management.",
+    tags: ["NextJS"],
+  },
+  {
+    title: "Fitness Goal Planner",
+    url: "https://fitness-goal-planner.vercel.app/",
+    iframeTitle: "Fitness Goal Planner live preview",
+    description:
+      "Personalized workout architecture. A full-stack application focused on algorithmic goal setting and progress visualization.",
+    tags: ["NextJS"],
+  },
+];
+
 export default function Home() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [activeProject, setActiveProject] = useState(0);
-
-  const navSections = [
-    { id: "home", label: "HOME", href: "#home", icon: <IconArrowNE /> },
-    { id: "work", label: "WORKS", href: "#work", icon: <IconGrid /> },
-    { id: "skills", label: "SKILLS", href: "#skills", icon: <IconLayers /> },
-    { id: "contact", label: "CONTACT", href: "#contact", icon: <IconMail /> },
-  ];
-
-  const footerLinks = [
-    { label: "HOME", href: "#home" },
-    { label: "WORKS", href: "#work" },
-    { label: "SKILLS", href: "#skills" },
-  ];
-
-  const focusRingClass =
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#131315]";
-
-  const projects = [
-    {
-      title: "Pilar08.org",
-      url: "https://pilar08.org",
-      iframeTitle: "Pilar08.org live preview",
-      description:
-        "A centralized platform for architectural resources and community engagement. Built with performance and minimal design at its core.",
-      tags: ["NextJS", "PostgreSQL"],
-    },
-    {
-      title: "inkplex",
-      url: "https://inkplex.vercel.app/",
-      iframeTitle: "inkplex live preview",
-      description:
-        "An interactive AI-powered storytelling platform. Integrate your preferred AI API to dynamically generate and guide branching narratives in real-time.",
-      tags: ["NextJS"],
-    },
-    {
-      title: "The Checklisted",
-      url: "https://the-checklisted.vercel.app/",
-      iframeTitle: "The Checklisted live preview",
-      description:
-        "A lightweight, user-friendly to do web app for creating tasks and checklists. Quickly add and edit tasks, check items off as you complete them, and export your lists to Excel for backup or sharing. Designed for simple, persistent workflows and fast task management.",
-      tags: ["NextJS"],
-    },
-    {
-      title: "Fitness Goal Planner",
-      url: "https://fitness-goal-planner.vercel.app/",
-      iframeTitle: "Fitness Goal Planner live preview",
-      description:
-        "Personalized workout architecture. A full-stack application focused on algorithmic goal setting and progress visualization.",
-      tags: ["NextJS"],
-    },
-  ];
 
   useEffect(() => {
     setMounted(true);
