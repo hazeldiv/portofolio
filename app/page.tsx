@@ -44,6 +44,14 @@ const projects = [
     tags: ["NextJS", "PostgreSQL"],
   },
   {
+    title: "HCloud",
+    url: "https://HCloud.my.id/",
+    iframeTitle: "HCloud live preview",
+    description:
+      "A self-hosted personal cloud drive for managing files, backups, and documents from anywhere. Built as a private alternative to Google Drive, tailored to my own workflow and home storage needs.",
+    tags: ["NextJS"],
+  },
+  {
     title: "inkplex",
     url: "https://inkplex.vercel.app/",
     iframeTitle: "inkplex live preview",
