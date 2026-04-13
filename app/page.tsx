@@ -49,7 +49,7 @@ const projects = [
     iframeTitle: "HCloud live preview",
     description:
       "A self-hosted personal cloud drive for managing files, backups, and documents from anywhere. Built as a private alternative to Google Drive, tailored to my own workflow and home storage needs.",
-    tags: ["NextJS"],
+    tags: ["NextJS", "Golang", "PostgreSQL"],
   },
   {
     title: "inkplex",
