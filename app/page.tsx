@@ -387,7 +387,7 @@ export default function Home() {
               {(
                 [
                   {
-                    title: "Foundations",
+                    title: "Frontend",
                     accent: "border-[#cc9900] dark:border-[#FFBF00]",
                     items: [
                       ["Next.js", "01"],
@@ -397,7 +397,7 @@ export default function Home() {
                     ],
                   },
                   {
-                    title: "Backend Structure",
+                    title: "Backend",
                     accent: "border-[#d4c5ab] dark:border-[#504532]",
                     items: [
                       [".NET Core", "05"],
@@ -407,21 +407,21 @@ export default function Home() {
                     ],
                   },
                   {
-                    title: "Storage & Logic",
+                    title: "Database",
                     accent: "border-[#d4c5ab] dark:border-[#504532]",
                     items: [
                       ["MySQL", "09"],
                       ["PostgreSQL", "10"],
-                      ["Entity Framework", "11"],
+                      ["Sql Server", "11"],
                     ],
                   },
                   {
-                    title: "Design Philosophy",
+                    title: "Other Programming Languages",
                     accent: "border-[#d4c5ab] dark:border-[#504532]",
                     items: [
-                      ["Figma", "12"],
-                      ["Adobe Suite", "13"],
-                      ["UI/UX Arch", "14"],
+                      ["Python", "12"],
+                      ["LUA", "13"],
+                      ["Java", "14"],
                     ],
                   },
                 ] as {
