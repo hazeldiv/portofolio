@@ -49,7 +49,7 @@ const projects = [
     iframeTitle: "HCloud live preview",
     description:
       "A self-hosted personal cloud drive for managing files, backups, and documents from anywhere. Built as a private alternative to Google Drive, tailored to my own workflow and home storage needs.",
-    tags: ["NextJS", "Golang", "PostgreSQL"],
+    tags: ["NextJS"],
   },
   {
     title: "inkplex",
@@ -74,6 +74,46 @@ const projects = [
     description:
       "Personalized workout architecture. A full-stack application focused on algorithmic goal setting and progress visualization.",
     tags: ["NextJS"],
+  },
+];
+
+const skills = [
+  {
+    title: "Frontend",
+    accent: "border-[#cc9900] dark:border-[#FFBF00]",
+    items: [
+      ["Next.js", "01"],
+      ["React.js", "02"],
+      ["TypeScript", "03"],
+      ["Tailwind CSS", "04"],
+    ],
+  },
+  {
+    title: "Backend",
+    items: [
+      [".NET Core", "05"],
+      ["Laravel", "06"],
+      ["Node.js", "07"],
+      ["PHP", "08"],
+    ],
+  },
+  {
+    title: "Database",
+    items: [
+      ["MySQL", "09"],
+      ["PostgreSQL", "10"],
+      ["Sql Server", "11"],
+      ["Firestore", "12"],
+    ],
+  },
+  {
+    title: "Other Programming Languages",
+    items: [
+      ["Python", "13"],
+      ["LUA", "14"],
+      ["Java", "15"],
+      ["C/C++", "16"],
+    ],
   },
 ];
 
@@ -384,55 +424,10 @@ export default function Home() {
             </div>
 
             <div className="md:col-start-6 md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {(
-                [
-                  {
-                    title: "Frontend",
-                    accent: "border-[#cc9900] dark:border-[#FFBF00]",
-                    items: [
-                      ["Next.js", "01"],
-                      ["React.js", "02"],
-                      ["TypeScript", "03"],
-                      ["Tailwind CSS", "04"],
-                    ],
-                  },
-                  {
-                    title: "Backend",
-                    accent: "border-[#d4c5ab] dark:border-[#504532]",
-                    items: [
-                      [".NET Core", "05"],
-                      ["Laravel", "06"],
-                      ["Node.js", "07"],
-                      ["PHP", "08"],
-                    ],
-                  },
-                  {
-                    title: "Database",
-                    accent: "border-[#d4c5ab] dark:border-[#504532]",
-                    items: [
-                      ["MySQL", "09"],
-                      ["PostgreSQL", "10"],
-                      ["Sql Server", "11"],
-                    ],
-                  },
-                  {
-                    title: "Other Programming Languages",
-                    accent: "border-[#d4c5ab] dark:border-[#504532]",
-                    items: [
-                      ["Python", "12"],
-                      ["LUA", "13"],
-                      ["Java", "14"],
-                    ],
-                  },
-                ] as {
-                  title: string;
-                  accent: string;
-                  items: [string, string][];
-                }[]
-              ).map(({ title, accent, items }) => (
+              {skills.map(({ title, items }) => (
                 <div
                   key={title}
-                  className={`p-8 bg-[#f4f1ea] dark:bg-[#1b1b1d] border-l-4 ${accent}`}
+                  className={`p-8 bg-[#f4f1ea] dark:bg-[#1b1b1d] border-l-4 border-[#d4c5ab] dark:border-[#504532] shadow-md hover:shadow-xl hover:border-[#cc9900] hover:dark:border-[#FFBF00] transition-all duration-300 hover:scale-[1.02] group`}
                 >
                   <h4 className="font-headline text-xs tracking-widest text-[#6b5e44] dark:text-[#9c8f78] uppercase mb-6">
                     {title}

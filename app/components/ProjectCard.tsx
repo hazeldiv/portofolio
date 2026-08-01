@@ -57,24 +57,33 @@ export function ProjectCard({
 
   const isDescLeft = descriptionSide === "left";
   return (
-    <div className="group flex flex-col xl:flex-row gap-6 xl:gap-8 items-stretch">
-      <div
-        ref={iframeContainerRef}
-        className={`xl:basis-[62%] overflow-hidden bg-[#1a1a1c] dark:bg-[#0a0a0a] w-full order-1 ${
+    <div className="flex flex-col xl:flex-row gap-6 xl:gap-8 items-stretch">
+      <a
+        href={viewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`xl:basis-[62%] overflow-hidden bg-[#1a1a1c] dark:bg-[#0a0a0a] w-full order-1 cursor-pointer group transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] ${
           isDescLeft ? "xl:order-2" : "xl:order-1"
         }`}
         style={{ height: `${900 * iframeScale}px` }}
       >
-        <iframe
-          src={iframeUrl}
-          title={iframeTitle}
-          loading="lazy"
-          scrolling="no"
-          className={`w-[1440px] h-[900px] border-0 pointer-events-none origin-top-left aspect-[4/5]`}
-          style={{ scale: iframeScale }}
-          sandbox="allow-scripts allow-same-origin"
-        />
-      </div>
+        <div ref={iframeContainerRef} className="relative w-full h-full">
+          <iframe
+            src={iframeUrl}
+            title={iframeTitle}
+            loading="lazy"
+            scrolling="no"
+            className={`w-[1440px] h-[900px] border-0 pointer-events-none origin-top-left aspect-[4/5]`}
+            style={{ scale: iframeScale }}
+            sandbox="allow-scripts allow-same-origin"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/60 transition-colors duration-300">
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-headline text-white text-sm tracking-widest uppercase flex items-center gap-2">
+              View Project <IconExternal cls="w-4 h-4" />
+            </span>
+          </div>
+        </div>
+      </a>
       <div
         className={`xl:basis-[38%] bg-[#fdfbf7] dark:bg-[#1f1f21] flex flex-col justify-center p-8 md:p-10 shadow-xl dark:shadow-none order-2 ${
           isDescLeft ? "xl:order-1" : "xl:order-2"
@@ -98,9 +107,9 @@ export function ProjectCard({
           href={viewUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-3 font-headline text-sm font-bold tracking-widest uppercase text-[#1a1a1c] dark:text-[#e4e2e4] group-hover:text-[#cc9900] dark:group-hover:text-[#FFBF00] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00]"
+          className="inline-flex items-center gap-3 font-headline text-sm font-bold tracking-widest uppercase text-[#1a1a1c] dark:text-[#e4e2e4] hover:text-[#cc9900] dark:hover:text-[#FFBF00] transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00]"
         >
-          VIEW_SITE
+          VIEW SITE
           <IconExternal />
         </a>
       </div>
