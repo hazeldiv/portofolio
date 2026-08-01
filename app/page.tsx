@@ -182,7 +182,9 @@ export default function Home() {
     (new Date().getTime() - new Date("2024-09-01").getTime()) /
       (86400000 * 365),
   );
-  let studyTitle = `CS Student / 0${currentStudyTime} Year`;
+
+  const yearText = ["First", "Second", "Third", "Fourth"];
+  let studyTitle = `CS Student / ${yearText[currentStudyTime - 1]} Year`;
   if (currentStudyTime > 4) studyTitle = "CS Graduate";
   const scrollToTop = () => {
     const prefersReducedMotion = window.matchMedia(
