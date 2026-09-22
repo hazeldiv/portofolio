@@ -1,14 +1,13 @@
 "use client";
 
-import { useState, useEffect, useSyncExternalStore } from "react";
-import { useTheme } from "next-themes";
+import { useState, useEffect } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { SideLink } from "./components/SideLink";
 import { ProjectCard } from "./components/ProjectCard";
+import { PumiceCard } from "./components/PumiceCard";
 import { Reveal } from "./components/Reveal";
+import { ThemeToggle } from "./components/ThemeToggle";
 import {
-  IconSun,
-  IconMoon,
   IconMenu,
   IconClose,
   IconArrowUp,
@@ -34,10 +33,6 @@ const footerLinks = [
 
 const focusRingClass =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#131315]";
-
-const emptySubscribe = () => () => {};
-const getClientSnapshot = () => true;
-const getServerSnapshot = () => false;
 
 const projects = [
   {
@@ -82,6 +77,22 @@ const projects = [
   },
 ];
 
+type Work =
+  | { kind: "pumice"; title: string }
+  | {
+      kind: "web";
+      title: string;
+      url: string;
+      iframeTitle: string;
+      description: string;
+      tags: string[];
+    };
+
+const works: Work[] = [
+  { kind: "pumice", title: "Pumice" },
+  ...projects.map((p) => ({ kind: "web" as const, ...p })),
+];
+
 const skills = [
   {
     title: "Frontend",
@@ -123,12 +134,6 @@ const skills = [
 ];
 
 export default function Home() {
-  const { theme, setTheme } = useTheme();
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    getClientSnapshot,
-    getServerSnapshot,
-  );
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [activeProject, setActiveProject] = useState(0);
@@ -179,7 +184,7 @@ export default function Home() {
           mid <= workEl.offsetTop + workEl.offsetHeight
         ) {
           let currentProject = 0;
-          for (let i = 0; i < projects.length; i++) {
+          for (let i = 0; i < works.length; i++) {
             const el = document.getElementById(`project-${i}`);
             if (el && el.offsetTop <= mid) {
               currentProject = i;
@@ -269,27 +274,7 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-3">
-          {mounted ? (
-            <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className={`flex items-center gap-2 px-4 py-2 border border-[#d4c5ab] dark:border-[#504532] text-[#6b5e44] dark:text-[#D4C5AB] hover:border-[#cc9900] dark:hover:border-[#FFBF00] hover:text-[#cc9900] dark:hover:text-[#FFBF00] transition-colors font-headline text-xs tracking-widest uppercase ${focusRingClass}`}
-              aria-label="Toggle theme"
-            >
-              {theme !== "dark" ? (
-                <>
-                  <IconMoon />
-                  DARK
-                </>
-              ) : (
-                <>
-                  <IconSun />
-                  LIGHT
-                </>
-              )}
-            </button>
-          ) : (
-            <div className="w-[94px] h-[34px]" />
-          )}
+          <ThemeToggle />
 
           <button
             onClick={() => setMenuOpen(!menuOpen)}
@@ -344,11 +329,11 @@ export default function Home() {
             : "opacity-0 pointer-events-none"
         }`}
       >
-        {projects.map((p, i) => (
+        {works.map((w, i) => (
           <button
             key={`dot-${i}`}
             onClick={() => scrollToProject(`project-${i}`)}
-            aria-label={`Go to project: ${p.title}`}
+            aria-label={`Go to project: ${w.title}`}
             className={`transition-all duration-300 rounded-full ${
               activeProject === i
                 ? "w-2 h-2 bg-[#cc9900] dark:bg-[#FFBF00]"
@@ -446,18 +431,25 @@ export default function Home() {
           </Reveal>
 
           <div className="space-y-40">
-            {projects.map((p, i) => (
-              <Reveal key={`project-${i}`} id={`project-${i}`}>
-                <ProjectCard
-                  iframeUrl={p.url}
-                  iframeTitle={p.url}
-                  label={`0${i + 1} / WORKS`}
-                  projectTitle={p.title}
-                  description={p.description}
-                  tags={p.tags}
-                  viewUrl={p.url}
-                  descriptionSide={i % 2 === 0 ? "right" : "left"}
-                />
+            {works.map((w, i) => (
+              <Reveal key={w.title} id={`project-${i}`}>
+                {w.kind === "pumice" ? (
+                  <PumiceCard
+                    label={`0${i + 1} / WORKS`}
+                    descriptionSide={i % 2 === 0 ? "right" : "left"}
+                  />
+                ) : (
+                  <ProjectCard
+                    iframeUrl={w.url}
+                    iframeTitle={w.url}
+                    label={`0${i + 1} / WORKS`}
+                    projectTitle={w.title}
+                    description={w.description}
+                    tags={w.tags}
+                    viewUrl={w.url}
+                    descriptionSide={i % 2 === 0 ? "right" : "left"}
+                  />
+                )}
               </Reveal>
             ))}
           </div>
