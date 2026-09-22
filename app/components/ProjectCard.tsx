@@ -41,6 +41,8 @@ export function ProjectCard({
 }: ProjectCardProps) {
   const iframeContainerRef = useRef<HTMLDivElement>(null);
   const [iframeScale, setIframeScale] = useState(1);
+  const [inView, setInView] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const updateScale = () => {
@@ -55,6 +57,33 @@ export function ProjectCard({
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
+  useEffect(() => {
+    const el = iframeContainerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.disconnect();
+          }
+        }
+      },
+      { rootMargin: "400px 0px" },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!inView || loaded) return;
+
+    const timer = window.setTimeout(() => setLoaded(true), 8000);
+    return () => window.clearTimeout(timer);
+  }, [inView, loaded]);
+
   const isDescLeft = descriptionSide === "left";
   return (
     <div className="flex flex-col xl:flex-row gap-6 xl:gap-8 items-stretch">
@@ -68,16 +97,29 @@ export function ProjectCard({
         style={{ height: `${900 * iframeScale}px` }}
       >
         <div ref={iframeContainerRef} className="relative w-full h-full">
-          <iframe
-            src={iframeUrl}
-            title={iframeTitle}
-            loading="lazy"
-            scrolling="no"
-            className={`w-[1440px] h-[900px] border-0 pointer-events-none origin-top-left aspect-[4/5]`}
-            style={{ scale: iframeScale }}
-            sandbox="allow-scripts allow-same-origin"
-          />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/60 transition-colors duration-300">
+          {!loaded && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-[#1a1a1c] dark:bg-[#0a0a0a]">
+              <span className="font-headline text-[10px] md:text-xs tracking-[0.4em] uppercase text-[#9c8f78]">
+                {projectTitle}
+              </span>
+              <span className="h-px w-16 overflow-hidden bg-[#504532]">
+                <span className="block h-full w-1/2 animate-preview-shimmer bg-[#cc9900] dark:bg-[#FFBF00]" />
+              </span>
+            </div>
+          )}
+          {inView && (
+            <iframe
+              src={iframeUrl}
+              title={iframeTitle}
+              loading="lazy"
+              scrolling="no"
+              onLoad={() => setLoaded(true)}
+              className={`w-[1440px] h-[900px] border-0 pointer-events-none origin-top-left aspect-[4/5]`}
+              style={{ scale: iframeScale }}
+              sandbox="allow-scripts allow-same-origin"
+            />
+          )}
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/0 group-hover:bg-black/60 transition-colors duration-300">
             <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-headline text-white text-sm tracking-widest uppercase flex items-center gap-2">
               View Project <IconExternal cls="w-4 h-4" />
             </span>

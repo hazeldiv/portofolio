@@ -18,10 +18,10 @@ export function SideLink({
       className="group flex flex-col items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00]"
     >
       <span
-        className={`transition-opacity ${
+        className={`transition-all duration-300 ${
           active
-            ? "opacity-100 text-[#cc9900] dark:text-[#FFBF00]"
-            : "opacity-40 group-hover:opacity-100 text-[#6b5e44] dark:text-[#D4C5AB]"
+            ? "opacity-100 scale-110 text-[#cc9900] dark:text-[#FFBF00]"
+            : "opacity-40 group-hover:opacity-100 group-hover:scale-105 text-[#6b5e44] dark:text-[#D4C5AB]"
         }`}
       >
         {icon}

@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { TypeAnimation } from "react-type-animation";
 import { SideLink } from "./components/SideLink";
 import { ProjectCard } from "./components/ProjectCard";
+import { Reveal } from "./components/Reveal";
 import {
   IconSun,
   IconMoon,
@@ -33,6 +34,10 @@ const footerLinks = [
 
 const focusRingClass =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#cc9900] dark:focus-visible:ring-[#FFBF00] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#131315]";
+
+const emptySubscribe = () => () => {};
+const getClientSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 const projects = [
   {
@@ -119,14 +124,32 @@ const skills = [
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [activeProject, setActiveProject] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (!menuOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -140,6 +163,12 @@ export default function Home() {
         }
       }
       setActiveSection(currentSection);
+
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(
+        scrollable > 0 ? Math.min(100, (window.scrollY / scrollable) * 100) : 0,
+      );
 
       // Project tracking (only while in work section)
       const workEl = document.getElementById("work");
@@ -198,6 +227,16 @@ export default function Home() {
 
   return (
     <>
+      <div
+        aria-hidden="true"
+        className="fixed top-0 left-0 z-[60] h-0.5 w-full overflow-hidden"
+      >
+        <div
+          className="h-full w-full origin-left bg-[#cc9900] dark:bg-[#FFBF00]"
+          style={{ transform: `scaleX(${progress / 100})` }}
+        />
+      </div>
+
       <nav className="fixed top-0 w-full z-50 bg-[#fdfbf7]/90 dark:bg-[#131315]/90 backdrop-blur-md flex justify-between items-center px-6 md:px-12 py-3 sm:py-5 border-b border-[#ede9e0] dark:border-[#1f1f21]">
         <a
           className={`text-lg sm:text-xl font-bold tracking-tighter text-[#cc9900] dark:text-[#FFBF00] font-headline ${focusRingClass}`}
@@ -212,13 +251,19 @@ export default function Home() {
               key={s.id}
               href={s.href}
               aria-current={activeSection === s.id ? "page" : undefined}
-              className={`font-headline uppercase tracking-widest text-sm font-bold transition-colors ${
+              className={`relative font-headline uppercase tracking-widest text-sm font-bold transition-colors ${
                 activeSection === s.id
                   ? "text-[#cc9900] dark:text-[#FFBF00] hover:opacity-80"
                   : "text-[#6b5e44] dark:text-[#D4C5AB] hover:text-[#cc9900] dark:hover:text-[#FFBF00]"
               } ${focusRingClass}`}
             >
               {s.label}
+              <span
+                aria-hidden="true"
+                className={`absolute -bottom-1.5 left-0 h-px w-full origin-left bg-[#cc9900] dark:bg-[#FFBF00] transition-transform duration-300 ${
+                  activeSection === s.id ? "scale-x-100" : "scale-x-0"
+                }`}
+              />
             </a>
           ))}
         </div>
@@ -250,6 +295,8 @@ export default function Home() {
             onClick={() => setMenuOpen(!menuOpen)}
             className={`md:hidden text-[#cc9900] dark:text-[#FFBF00] ${focusRingClass}`}
             aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             {menuOpen ? <IconClose /> : <IconMenu />}
           </button>
@@ -257,7 +304,10 @@ export default function Home() {
       </nav>
 
       {menuOpen && (
-        <div className="fixed top-[73px] left-0 right-0 z-40 bg-[#fdfbf7] dark:bg-[#131315] border-b border-[#d4c5ab] dark:border-[#504532] px-8 py-6 flex flex-col gap-6 md:hidden">
+        <div
+          id="mobile-menu"
+          className="animate-menu-in fixed top-[73px] left-0 right-0 z-40 bg-[#fdfbf7] dark:bg-[#131315] border-b border-[#d4c5ab] dark:border-[#504532] px-8 py-6 flex flex-col gap-6 md:hidden"
+        >
           {navSections.map((s) => (
             <a
               key={s.id}
@@ -314,51 +364,60 @@ export default function Home() {
           className="min-h-[100dvh] flex flex-col justify-center px-6 md:px-24 pt-20 bg-[#fdfbf7] dark:bg-[#131315]"
         >
           <div className="max-w-7xl w-full">
-            <div className="flex flex-wrap items-baseline gap-4 mb-10">
-              <span className="font-headline max-lg:w-full text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase min-h-[20px]">
-                <TypeAnimation
-                  sequence={[
-                    "FULL-STACK DEVELOPER",
-                    3000,
-                    "SOFTWARE ENGINEER",
-                    3000,
-                    "TECH ENTHUSIAST",
-                    3000,
-                  ]}
-                  wrapper="span"
-                  speed={20}
-                  repeat={Infinity}
-                />
-              </span>
-              <span className="h-px w-24 bg-[#d4c5ab] dark:bg-[#504532] self-center max-lg:hidden" />
-              <span className="font-headline text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase">
-                {studyTitle}
-              </span>
-            </div>
+            <Reveal className="mb-10">
+              <div className="flex flex-wrap items-baseline gap-4">
+                <span className="font-headline max-lg:w-full text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase min-h-[20px]">
+                  <TypeAnimation
+                    sequence={[
+                      "FULL-STACK DEVELOPER",
+                      3000,
+                      "SOFTWARE ENGINEER",
+                      3000,
+                      "TECH ENTHUSIAST",
+                      3000,
+                    ]}
+                    wrapper="span"
+                    speed={20}
+                    repeat={Infinity}
+                  />
+                </span>
+                <span className="h-px w-24 bg-[#d4c5ab] dark:bg-[#504532] self-center max-lg:hidden" />
+                <span className="font-headline text-xs md:text-sm tracking-[0.4em] text-[#6b5e44] dark:text-[#9c8f78] uppercase">
+                  {studyTitle}
+                </span>
+              </div>
+            </Reveal>
 
-            <h1 className="font-headline text-[3.5rem] sm:text-[5rem] md:text-[7rem] 2xl:text-[9rem] leading-none font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4] mb-6">
-              HAZEL DIV
-              <br />
-              <span className="text-[#cc9900] dark:text-[#FFBF00]">ALDEN.</span>
-            </h1>
+            <Reveal className="mb-6" delay={100}>
+              <h1 className="font-headline text-[3.5rem] sm:text-[5rem] md:text-[7rem] 2xl:text-[9rem] leading-none font-bold tracking-tighter text-[#1a1a1c] dark:text-[#e4e2e4]">
+                HAZEL DIV
+                <br />
+                <span className="text-[#cc9900] dark:text-[#FFBF00]">
+                  ALDEN.
+                </span>
+              </h1>
+            </Reveal>
 
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-12">
-              <div className="xl:col-start-7 xl:col-span-6">
+              <Reveal
+                className="xl:col-start-7 xl:col-span-6"
+                delay={200}
+              >
                 <p className="text-[1rem] md:text-xl text-[#6b5e44] dark:text-[#9c8f78] font-light leading-relaxed mb-10 text-justify w-[90%]">
-                  Hello, I'm Hazel Div Alden. I design and build full-stack web
-                  applications with clean architecture, strong performance, and
-                  polished interfaces. I help teams turn ideas into reliable
+                  Hello, I&apos;m Hazel Div Alden. I design and build full-stack
+                  web applications with clean architecture, strong performance,
+                  and polished interfaces. I help teams turn ideas into reliable
                   software through pragmatic engineering and thoughtful design.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <a
                     href="#work"
-                    className={`bg-[#cc9900] dark:bg-[#FFBF00] text-[#402d00] px-5 sm:px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all active:scale-95 hover:bg-[#b38600] dark:hover:bg-[#e6a800] ${focusRingClass}`}
+                    className={`btn-sweep bg-[#cc9900] dark:bg-[#FFBF00] text-[#402d00] px-5 sm:px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all active:scale-95 hover:bg-[#b38600] dark:hover:bg-[#e6a800] ${focusRingClass}`}
                   >
                     VIEW WORKS
                   </a>
                   <a
-                    className={`border border-[#d4c5ab] dark:border-[#504532] text-[#1a1a1c] dark:text-[#e4e2e4] px-5 sm:px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all hover:bg-[#f0ede6] dark:hover:bg-[#2a2a2c] active:scale-95 ${focusRingClass}`}
+                    className={`btn-sweep border border-[#d4c5ab] dark:border-[#504532] text-[#1a1a1c] dark:text-[#e4e2e4] px-5 sm:px-10 py-4 font-headline font-bold text-sm tracking-widest uppercase transition-all hover:bg-[#f0ede6] dark:hover:bg-[#2a2a2c] active:scale-95 ${focusRingClass}`}
                     href="/resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -366,7 +425,7 @@ export default function Home() {
                     RESUME
                   </a>
                 </div>
-              </div>
+              </Reveal>
             </div>
           </div>
         </section>
@@ -375,7 +434,7 @@ export default function Home() {
           id="work"
           className="min-h-screen py-32 px-6 md:px-24 bg-[#f4f1ea] dark:bg-[#0e0e10]"
         >
-          <div className="flex justify-between items-end mb-24">
+          <Reveal className="flex justify-between items-end mb-24">
             <div>
               <h2 className="font-headline text-xs tracking-[0.5em] text-[#cc9900] dark:text-[#FFBF00] uppercase mb-4">
                 Selected Works
@@ -384,11 +443,11 @@ export default function Home() {
                 PROJECTS
               </h3>
             </div>
-          </div>
+          </Reveal>
 
           <div className="space-y-40">
             {projects.map((p, i) => (
-              <div key={`project-${i}`} id={`project-${i}`}>
+              <Reveal key={`project-${i}`} id={`project-${i}`}>
                 <ProjectCard
                   iframeUrl={p.url}
                   iframeTitle={p.url}
@@ -399,7 +458,7 @@ export default function Home() {
                   viewUrl={p.url}
                   descriptionSide={i % 2 === 0 ? "right" : "left"}
                 />
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
@@ -409,7 +468,7 @@ export default function Home() {
           className="py-32 min-h-screen px-6 md:px-24 bg-[#fdfbf7] dark:bg-[#131315]"
         >
           <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div className="md:col-span-4">
+            <Reveal className="md:col-span-4">
               <h2 className="font-headline text-xs tracking-[0.5em] text-[#cc9900] dark:text-[#FFBF00] uppercase mb-4">
                 The Stack
               </h2>
@@ -423,31 +482,30 @@ export default function Home() {
                 digital infrastructures. My approach prioritizes type‑safety,
                 modularity, and clean architectural patterns.
               </p>
-            </div>
+            </Reveal>
 
             <div className="md:col-start-6 md:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {skills.map(({ title, items }) => (
-                <div
-                  key={title}
-                  className={`p-8 bg-[#f4f1ea] dark:bg-[#1b1b1d] border-l-4 border-[#d4c5ab] dark:border-[#504532] shadow-md hover:shadow-xl hover:border-[#cc9900] hover:dark:border-[#FFBF00] transition-all duration-300 hover:scale-[1.02] group`}
-                >
-                  <h4 className="font-headline text-xs tracking-widest text-[#6b5e44] dark:text-[#9c8f78] uppercase mb-6">
-                    {title}
-                  </h4>
-                  <ul className="space-y-4 font-headline text-xl font-medium text-[#1a1a1c] dark:text-[#e4e2e4]">
-                    {items.map(([name, num]) => (
-                      <li
-                        key={name}
-                        className="flex justify-between items-center"
-                      >
-                        {name}
-                        <span className="text-xs text-[#9c8f78] opacity-40">
-                          {num}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+              {skills.map(({ title, items }, index) => (
+                <Reveal key={title} delay={index * 80}>
+                  <div className="h-full p-8 bg-[#f4f1ea] dark:bg-[#1b1b1d] border-l-4 border-[#d4c5ab] dark:border-[#504532] shadow-md hover:shadow-xl hover:border-[#cc9900] hover:dark:border-[#FFBF00] transition-all duration-300 hover:scale-[1.02] group">
+                    <h4 className="font-headline text-xs tracking-widest text-[#6b5e44] dark:text-[#9c8f78] uppercase mb-6">
+                      {title}
+                    </h4>
+                    <ul className="space-y-4 font-headline text-xl font-medium text-[#1a1a1c] dark:text-[#e4e2e4]">
+                      {items.map(([name, num]) => (
+                        <li
+                          key={name}
+                          className="flex justify-between items-center transition-transform duration-300 hover:translate-x-1"
+                        >
+                          {name}
+                          <span className="text-xs text-[#9c8f78] opacity-40 transition-all duration-300 group-hover:opacity-100 group-hover:text-[#cc9900] dark:group-hover:text-[#FFBF00]">
+                            {num}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -458,7 +516,7 @@ export default function Home() {
           className="min-h-screen bg-[#f4f1ea] dark:bg-[#0e0e10] py-32 px-6 md:px-24"
         >
           <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-16">
-            <div className="md:w-1/2">
+            <Reveal className="md:w-1/2">
               <h2 className="font-headline text-xs tracking-[0.5em] text-[#cc9900] dark:text-[#FFBF00] uppercase mb-8">
                 Get In Touch
               </h2>
@@ -478,9 +536,9 @@ export default function Home() {
                 hazeldiv8@gmail.com
                 <IconOutward cls="w-7 h-7 fill-[#cc9900] dark:fill-[#FFBF00]" />
               </a>
-            </div>
+            </Reveal>
 
-            <div className="md:w-1/3 flex flex-col gap-16">
+            <Reveal className="md:w-1/3 flex flex-col gap-16" delay={120}>
               <div className="grid grid-cols-2 gap-10">
                 <div>
                   <h4 className="font-headline text-[10px] tracking-widest text-[#6b5e44] dark:text-[#9c8f78] uppercase mb-6">
@@ -538,7 +596,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-            </div>
+            </Reveal>
           </div>
         </footer>
       </main>
